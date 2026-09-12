@@ -1,0 +1,4 @@
+{
+    "extends": "latin",
+    "digits": {"0": "zero", "1": "unan", "2": "daou", "3": "tri", "4": "pevar", "5": "pemp", "6": "cʼhwecʼh", "7": "seizh", "8": "eizh", "9": "nav"}
+}

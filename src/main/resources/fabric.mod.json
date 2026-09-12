@@ -3,21 +3,23 @@
   "id": "bbs_lip_sync",
   "version": "${version}",
   "name": "BBS Lip Sync",
-  "description": "",
-  "authors": [],
+  "description": "Generates mouth pose keyframes from speech in BBS films, using offline Vosk speech recognition in over 20 languages.",
+  "authors": ["Wemppy"],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/bbs_lip_sync/icon.png",
   "environment": "*",
   "entrypoints": {
-    "fabric-datagen": [
-      "com.wemppy.bbs_lip_sync.client.Bbs_lip_syncDataGenerator"
+    "main": [
+      "com.wemppy.bbs_lip_sync.Bbs_lip_sync"
     ],
     "client": [
       "com.wemppy.bbs_lip_sync.client.Bbs_lip_syncClient"
     ],
-    "main": [
-      "com.wemppy.bbs_lip_sync.Bbs_lip_sync"
+    "bbs-addon": [
+      "com.wemppy.bbs_lip_sync.LipSyncAddon"
+    ],
+    "bbs-client-addon": [
+      "com.wemppy.bbs_lip_sync.client.LipSyncClientAddon"
     ]
   },
   "mixins": [

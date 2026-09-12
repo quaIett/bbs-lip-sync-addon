@@ -4,6 +4,7 @@
   "package": "com.wemppy.bbs_lip_sync.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "UIReplaysEditorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

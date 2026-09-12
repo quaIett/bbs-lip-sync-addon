@@ -21,12 +21,6 @@ loom {
     }
 }
 
-fabricApi {
-    configureDataGeneration {
-        client = true
-    }
-}
-
 repositories {
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
@@ -44,6 +38,12 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation files("libs/bbs-2.6-1.20.1.jar")
+
+    // Vosk (Kaldi) speech recognition, bundled into the mod jar (jar-in-jar). The jar carries the
+    // natives for Windows x64, Linux x64 and macOS (Intel + Apple Silicon); its only dependency,
+    // JNA, ships with Minecraft itself.
+    implementation("com.alphacephei:vosk:${project.vosk_version}") { transitive = false }
+    include "com.alphacephei:vosk:${project.vosk_version}"
 }
 
 processResources {

@@ -1,0 +1,4 @@
+{
+    "extends": "latin",
+    "digits": {"0": "sero", "1": "isa", "2": "dalawa", "3": "tatlo", "4": "apat", "5": "lima", "6": "anim", "7": "pito", "8": "walo", "9": "siyam"}
+}

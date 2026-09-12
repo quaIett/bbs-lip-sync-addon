@@ -1,0 +1,68 @@
+package com.wemppy.bbs_lip_sync.client;
+
+import mchorse.bbs_mod.l10n.L10n;
+import mchorse.bbs_mod.l10n.keys.IKey;
+
+/** Language keys used by the addon's UI; the strings live in {@code assets/bbs_lip_sync/assets/strings}. */
+public class LipSyncKeys
+{
+    public static final IKey GENERATE = L10n.lang("bbs_lip_sync.ui.generate");
+    public static final IKey CANCEL = L10n.lang("bbs_lip_sync.ui.cancel");
+    public static final IKey LANGUAGE = L10n.lang("bbs_lip_sync.ui.language");
+    public static final IKey PICK_LANGUAGE_TITLE = L10n.lang("bbs_lip_sync.ui.pick_language.title");
+
+    public static final IKey PICK_AUDIO_TITLE = L10n.lang("bbs_lip_sync.ui.pick_audio.title");
+    public static final IKey NO_AUDIO_TITLE = L10n.lang("bbs_lip_sync.ui.no_audio.title");
+    public static final IKey NO_AUDIO_MESSAGE = L10n.lang("bbs_lip_sync.ui.no_audio.message");
+    public static final IKey NO_POSES_TITLE = L10n.lang("bbs_lip_sync.ui.no_poses.title");
+    public static final IKey NO_POSES_MESSAGE = L10n.lang("bbs_lip_sync.ui.no_poses.message");
+
+    public static final IKey ERROR_TITLE = L10n.lang("bbs_lip_sync.ui.error.title");
+    public static final IKey ERROR_AUDIO_UNREADABLE = L10n.lang("bbs_lip_sync.ui.error.audio_unreadable");
+    public static final IKey ERROR_NATIVE = L10n.lang("bbs_lip_sync.ui.error.native");
+    public static final IKey ERROR_MODEL_CORRUPT = L10n.lang("bbs_lip_sync.ui.error.model_corrupt");
+    public static final IKey ERROR_LETTERS = L10n.lang("bbs_lip_sync.ui.error.letters");
+    public static final IKey ERROR_GENERIC = L10n.lang("bbs_lip_sync.ui.error.generic");
+
+    public static final IKey PROGRESS_LOADING = L10n.lang("bbs_lip_sync.ui.progress.loading");
+    public static final IKey PROGRESS_RECOGNIZING = L10n.lang("bbs_lip_sync.ui.progress.recognizing");
+    public static final IKey PROGRESS_BAKING = L10n.lang("bbs_lip_sync.ui.progress.baking");
+    public static final IKey PROGRESS_DONE = L10n.lang("bbs_lip_sync.ui.progress.done");
+    public static final IKey PROGRESS_NO_SPEECH = L10n.lang("bbs_lip_sync.ui.progress.no_speech");
+    public static final IKey PROGRESS_CANCELLED = L10n.lang("bbs_lip_sync.ui.progress.cancelled");
+
+    public static final IKey MODEL_TITLE = L10n.lang("bbs_lip_sync.ui.model.title");
+    public static final IKey MODEL_MESSAGE = L10n.lang("bbs_lip_sync.ui.model.message");
+    public static final IKey MODEL_DOWNLOAD = L10n.lang("bbs_lip_sync.ui.model.download");
+    public static final IKey MODEL_DOWNLOAD_SIZE = L10n.lang("bbs_lip_sync.ui.model.download_size");
+    public static final IKey MODEL_LATER = L10n.lang("bbs_lip_sync.ui.model.later");
+    public static final IKey MODEL_LANGUAGE = L10n.lang("bbs_lip_sync.ui.model.language");
+    public static final IKey MODEL_PROGRESS = L10n.lang("bbs_lip_sync.ui.model.progress");
+    public static final IKey MODEL_PROGRESS_UNKNOWN = L10n.lang("bbs_lip_sync.ui.model.progress_unknown");
+    public static final IKey MODEL_SPEED = L10n.lang("bbs_lip_sync.ui.model.speed");
+    public static final IKey SIZE_MB = L10n.lang("bbs_lip_sync.ui.size.mb");
+    public static final IKey SIZE_GB = L10n.lang("bbs_lip_sync.ui.size.gb");
+    public static final IKey MODEL_DOWNLOADING_HINT = L10n.lang("bbs_lip_sync.ui.model.downloading_hint");
+    public static final IKey MODEL_EXTRACTING = L10n.lang("bbs_lip_sync.ui.model.extracting");
+    public static final IKey MODEL_HIDE = L10n.lang("bbs_lip_sync.ui.model.hide");
+    public static final IKey MODEL_CANCEL = L10n.lang("bbs_lip_sync.ui.model.cancel");
+    public static final IKey MODEL_RETRY = L10n.lang("bbs_lip_sync.ui.model.retry");
+    public static final IKey MODEL_COPY_LINK = L10n.lang("bbs_lip_sync.ui.model.copy_link");
+    public static final IKey MODEL_OPEN_FOLDER = L10n.lang("bbs_lip_sync.ui.model.open_folder");
+    public static final IKey MODEL_ERROR_NETWORK = L10n.lang("bbs_lip_sync.ui.model.error_network");
+    public static final IKey MODEL_ERROR_CORRUPT = L10n.lang("bbs_lip_sync.ui.model.error_corrupt");
+    public static final IKey MODEL_ERROR_DISK = L10n.lang("bbs_lip_sync.ui.model.error_disk");
+    public static final IKey MODEL_ERROR_HINT = L10n.lang("bbs_lip_sync.ui.model.error_hint");
+
+    public static final IKey CONFIG_MODEL_SMALL = L10n.lang("bbs_lip_sync.config.speech.model_size.small");
+    public static final IKey CONFIG_MODEL_LARGE = L10n.lang("bbs_lip_sync.config.speech.model_size.large");
+    public static final IKey CONFIG_LANGUAGE_GAME = L10n.lang("bbs_lip_sync.config.speech.language.game");
+
+    /** A download size for people: {@code 45 МБ}, {@code 1.8 ГБ}. */
+    public static String size(int megabytes)
+    {
+        return megabytes >= 1024
+            ? SIZE_GB.format(String.format("%.1f", megabytes / 1024F)).get()
+            : SIZE_MB.format(String.valueOf(megabytes)).get();
+    }
+}

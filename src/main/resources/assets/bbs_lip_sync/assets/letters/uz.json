@@ -1,0 +1,4 @@
+{
+    "extends": "latin",
+    "digits": {"0": "nol", "1": "bir", "2": "ikki", "3": "uch", "4": "toʻrt", "5": "besh", "6": "olti", "7": "yetti", "8": "sakkiz", "9": "toʻqqiz"}
+}

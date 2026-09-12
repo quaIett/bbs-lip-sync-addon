@@ -1,0 +1,4 @@
+{
+    "extends": "latin",
+    "digits": {"0": "noll", "1": "ett", "2": "två", "3": "tre", "4": "fyra", "5": "fem", "6": "sex", "7": "sju", "8": "åtta", "9": "nio"}
+}

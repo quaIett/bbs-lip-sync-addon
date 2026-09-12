@@ -1,0 +1,4 @@
+{
+    "extends": "latin",
+    "digits": {"0": "zero", "1": "u", "2": "dos", "3": "tres", "4": "quatre", "5": "cinc", "6": "sis", "7": "set", "8": "vuit", "9": "nou"}
+}
