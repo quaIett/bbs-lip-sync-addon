@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "bbs_lip_sync",
+  "version": "${version}",
+  "name": "BBS Lip Sync",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/bbs_lip_sync/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.wemppy.bbs_lip_sync.client.Bbs_lip_syncDataGenerator"
+    ],
+    "client": [
+      "com.wemppy.bbs_lip_sync.client.Bbs_lip_syncClient"
+    ],
+    "main": [
+      "com.wemppy.bbs_lip_sync.Bbs_lip_sync"
+    ]
+  },
+  "mixins": [
+    "bbs_lip_sync.mixins.json",
+    {
+      "config": "bbs_lip_sync.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
