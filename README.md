@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="src/main/resources/assets/bbs_lip_sync/icon.png" alt="BBS Lip Sync" width="160" />
+
 # BBS Lip Sync
 
 Автоматический липсинк для мода BBS / Automatic lip sync for the BBS mod

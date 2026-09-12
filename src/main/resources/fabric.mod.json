@@ -7,14 +7,9 @@
   "authors": ["Wemppy"],
   "contact": {},
   "license": "MIT",
-  "environment": "*",
+  "icon": "assets/bbs_lip_sync/icon.png",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      "com.wemppy.bbs_lip_sync.Bbs_lip_sync"
-    ],
-    "client": [
-      "com.wemppy.bbs_lip_sync.client.Bbs_lip_syncClient"
-    ],
     "bbs-addon": [
       "com.wemppy.bbs_lip_sync.LipSyncAddon"
     ],
@@ -23,11 +18,7 @@
     ]
   },
   "mixins": [
-    "bbs_lip_sync.mixins.json",
-    {
-      "config": "bbs_lip_sync.client.mixins.json",
-      "environment": "client"
-    }
+    "bbs_lip_sync.client.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

@@ -1,0 +1,9 @@
+BBS Lip Sync bundles the following third-party software.
+
+Vosk API 0.3.45 (com.alphacephei:vosk), including its native libraries
+Copyright Alpha Cephei Inc. and contributors
+Licensed under the Apache License, Version 2.0, see licenses/vosk-LICENSE.txt
+Source: https://github.com/alphacep/vosk-api
+
+The speech recognition models are not bundled. They are downloaded on request from
+https://alphacephei.com/vosk/models, and each model comes under its own license.
