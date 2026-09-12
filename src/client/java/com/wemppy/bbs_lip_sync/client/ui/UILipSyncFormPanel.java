@@ -32,6 +32,7 @@ import mchorse.bbs_mod.utils.colors.Colors;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 
 /**
@@ -67,6 +68,9 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
 
     private PoseLibrary poses;
     private TextureLibrary textures;
+
+    /** What the shapes on screen were read for, see {@link #source()}. */
+    private String loaded;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <F extends UIForm> F attach(F editor)
@@ -127,6 +131,13 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
     @Override
     public void render(UIContext context)
     {
+        /* The texture or the model can change in another tab (or through undo) while this one
+         * holds what it read when the editor opened */
+        if (this.form != null && !Objects.equals(this.source(), this.loaded))
+        {
+            this.refresh();
+        }
+
         Viseme picked = this.form == null ? null : PICKED.get(this.form);
 
         if (picked != null && !MouthPreview.isShownBy(this))
@@ -152,6 +163,19 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
         return closed != null && TextureLibrary.of(closed).isUsable() ? MODE_TEXTURES : MODE_POSES;
     }
 
+    /** The model id or the closed mouth texture the current map belongs to; null when there's none. */
+    private String source()
+    {
+        if (this.mode.value == MODE_TEXTURES)
+        {
+            Link closed = TextureLibrary.closedTexture(this.form);
+
+            return closed == null ? null : closed.toString();
+        }
+
+        return ((ModelForm) this.form).model.get();
+    }
+
     private void switchMode(int mode)
     {
         this.mode.value = mode;
@@ -169,6 +193,7 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
 
         this.poses = null;
         this.textures = null;
+        this.loaded = this.source();
 
         IKey status = null;
 
