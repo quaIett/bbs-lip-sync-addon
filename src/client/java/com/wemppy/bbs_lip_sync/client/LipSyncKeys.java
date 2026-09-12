@@ -1,6 +1,7 @@
 package com.wemppy.bbs_lip_sync.client;
 
 import com.wemppy.bbs_lip_sync.client.phonemes.Viseme;
+import com.wemppy.bbs_lip_sync.client.settings.ValueTimingPreset;
 import mchorse.bbs_mod.l10n.L10n;
 import mchorse.bbs_mod.l10n.keys.IKey;
 
@@ -36,6 +37,9 @@ public class LipSyncKeys
     public static final IKey FORM_NO_TEXTURE = L10n.lang("bbs_lip_sync.ui.form.no_texture");
     public static final IKey FORM_PICK_POSE = L10n.lang("bbs_lip_sync.ui.form.pick_pose");
     public static final IKey FORM_RESET = L10n.lang("bbs_lip_sync.ui.form.reset");
+    public static final IKey FORM_SAMPLE = L10n.lang("bbs_lip_sync.ui.form.sample");
+    public static final IKey FORM_PLAY_TOOLTIP = L10n.lang("bbs_lip_sync.ui.form.play_tooltip");
+    public static final IKey FORM_STOP_TOOLTIP = L10n.lang("bbs_lip_sync.ui.form.stop_tooltip");
 
     public static final IKey ERROR_TITLE = L10n.lang("bbs_lip_sync.ui.error.title");
     public static final IKey ERROR_AUDIO_UNREADABLE = L10n.lang("bbs_lip_sync.ui.error.audio_unreadable");
@@ -77,6 +81,12 @@ public class LipSyncKeys
     public static final IKey CONFIG_MODEL_SMALL = L10n.lang("bbs_lip_sync.config.speech.model_size.small");
     public static final IKey CONFIG_MODEL_LARGE = L10n.lang("bbs_lip_sync.config.speech.model_size.large");
     public static final IKey CONFIG_LANGUAGE_GAME = L10n.lang("bbs_lip_sync.config.speech.language.game");
+    public static final IKey TIMING_CUSTOM = L10n.lang("bbs_lip_sync.config.timing.preset.custom");
+
+    public static IKey timingPreset(ValueTimingPreset.Preset preset)
+    {
+        return L10n.lang("bbs_lip_sync.config.timing.preset." + preset.name().toLowerCase());
+    }
 
     /** A shape as people read it: its main letter, or «closed» for the idle mouth. */
     public static IKey shape(Viseme viseme)

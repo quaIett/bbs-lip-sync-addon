@@ -3,7 +3,7 @@
   "id": "bbs_lip_sync",
   "version": "${version}",
   "name": "BBS Lip Sync",
-  "description": "Generates mouth pose keyframes from speech in BBS films, using offline Vosk speech recognition in over 20 languages.",
+  "description": "Lip sync for BBS films: mouth pose or texture keyframes from speech (offline Vosk recognition in over 20 languages) or from typed text.",
   "authors": ["Wemppy"],
   "contact": {},
   "license": "MIT",

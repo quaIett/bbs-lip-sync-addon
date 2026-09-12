@@ -62,19 +62,25 @@ public class KeyframeBaker
                     continue;
                 }
 
-                int index = channel.insert(tick, channel.getFactory().copy(rig.value(key.viseme())));
-                Keyframe<T> keyframe = channel.get(index);
-                KeyframeStyle style = keyframe.getStyle();
-
-                keyframe.getInterpolation().setInterp(rig.isSmooth() ? Interpolations.SINE_INOUT : Interpolations.CONST);
-                style.setColor(Color.rgb(key.viseme().rgb));
-                style.setShape(key.hold() ? KeyframeShape.DIAMOND : KeyframeShape.CIRCLE);
-                style.setFilled(true);
+                insert(channel, rig, key, tick);
                 written[0]++;
             }
         });
 
         return written[0];
+    }
+
+    /** One keyframe for a key, styled and eased like every generated one. */
+    public static <T> void insert(KeyframeChannel<T> channel, MouthRig<T> rig, VisemeTimeline.Key key, float tick)
+    {
+        int index = channel.insert(tick, channel.getFactory().copy(rig.value(key.viseme())));
+        Keyframe<T> keyframe = channel.get(index);
+        KeyframeStyle style = keyframe.getStyle();
+
+        keyframe.getInterpolation().setInterp(rig.isSmooth() ? Interpolations.SINE_INOUT : Interpolations.CONST);
+        style.setColor(Color.rgb(key.viseme().rgb));
+        style.setShape(key.hold() ? KeyframeShape.DIAMOND : KeyframeShape.CIRCLE);
+        style.setFilled(true);
     }
 
     private static boolean occupied(KeyframeChannel<?> channel, float tick)

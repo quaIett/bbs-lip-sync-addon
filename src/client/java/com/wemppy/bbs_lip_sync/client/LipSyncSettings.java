@@ -2,6 +2,7 @@ package com.wemppy.bbs_lip_sync.client;
 
 import com.wemppy.bbs_lip_sync.client.phonemes.TextSpeech;
 import com.wemppy.bbs_lip_sync.client.settings.ValueSpeechLanguage;
+import com.wemppy.bbs_lip_sync.client.settings.ValueTimingPreset;
 import mchorse.bbs_mod.settings.SettingsBuilder;
 import mchorse.bbs_mod.settings.values.core.ValueString;
 import mchorse.bbs_mod.settings.values.numeric.ValueBoolean;
@@ -27,6 +28,9 @@ public class LipSyncSettings
     /** Free the speech model's memory once a generation is done. */
     public static ValueBoolean unloadModel;
 
+    /** Calm, ordinary or fast speech: sets the four values below at once. */
+    public static ValueTimingPreset timingPreset;
+
     /** How many ticks before a sound the mouth starts moving toward its shape. */
     public static ValueFloat anticipation;
 
@@ -51,7 +55,9 @@ public class LipSyncSettings
         unloadModel = builder.getBoolean("unload_model", true);
 
         builder.category("timing", Icons.STOPWATCH);
-        anticipation = builder.getFloat("anticipation", 1F, 0F, 3F).slider(0.25D);
+        timingPreset = new ValueTimingPreset("preset");
+        builder.register(timingPreset);
+        anticipation =builder.getFloat("anticipation", 1F, 0F, 3F).slider(0.25D);
         minHold = builder.getFloat("min_hold", 1F, 0.5F, 5F).slider(0.25D);
         minPause = builder.getFloat("min_pause", 10F, 3F, 40F).slider(1D);
         closeDelay = builder.getFloat("close_delay", 4F, 0F, 10F).slider(0.5D);

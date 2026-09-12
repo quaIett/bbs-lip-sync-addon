@@ -2,6 +2,7 @@ package com.wemppy.bbs_lip_sync.client;
 
 import com.wemppy.bbs_lip_sync.LipSyncAddon;
 import com.wemppy.bbs_lip_sync.client.settings.ValueSpeechLanguage;
+import com.wemppy.bbs_lip_sync.client.settings.ValueTimingPreset;
 import com.wemppy.bbs_lip_sync.client.ui.UILipSyncFormPanel;
 import mchorse.bbs_mod.api.BBSAddonMod;
 import mchorse.bbs_mod.api.Subscribe;
@@ -42,6 +43,7 @@ public class LipSyncClientAddon implements BBSAddonMod
     public void onRegisterValueWidgets(RegisterValueWidgetsEvent event)
     {
         event.register(ValueSpeechLanguage.class, ValueSpeechLanguage::widget);
+        event.register(ValueTimingPreset.class, ValueTimingPreset::widget);
     }
 
     /**

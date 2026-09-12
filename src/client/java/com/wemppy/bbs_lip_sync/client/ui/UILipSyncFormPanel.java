@@ -1,22 +1,30 @@
 package com.wemppy.bbs_lip_sync.client.ui;
 
 import com.wemppy.bbs_lip_sync.client.LipSyncKeys;
+import com.wemppy.bbs_lip_sync.client.LipSyncSettings;
+import com.wemppy.bbs_lip_sync.client.TextLipSync;
+import com.wemppy.bbs_lip_sync.client.bake.KeyframeBaker;
 import com.wemppy.bbs_lip_sync.client.bake.MouthProfile;
+import com.wemppy.bbs_lip_sync.client.bake.MouthRig;
 import com.wemppy.bbs_lip_sync.client.bake.PoseLibrary;
 import com.wemppy.bbs_lip_sync.client.bake.TextureLibrary;
 import com.wemppy.bbs_lip_sync.client.phonemes.Viseme;
+import com.wemppy.bbs_lip_sync.client.phonemes.VisemeTimeline;
 import mchorse.bbs_mod.BBSSettings;
 import mchorse.bbs_mod.forms.forms.Form;
 import mchorse.bbs_mod.forms.forms.ModelForm;
 import mchorse.bbs_mod.graphics.texture.Texture;
 import mchorse.bbs_mod.l10n.keys.IKey;
 import mchorse.bbs_mod.resources.Link;
+import mchorse.bbs_mod.settings.values.base.BaseValueBasic;
 import mchorse.bbs_mod.settings.values.core.ValueLink;
 import mchorse.bbs_mod.ui.forms.editors.forms.UIForm;
 import mchorse.bbs_mod.ui.forms.editors.panels.UIFormPanel;
 import mchorse.bbs_mod.ui.framework.UIContext;
 import mchorse.bbs_mod.ui.framework.elements.UIElement;
+import mchorse.bbs_mod.ui.framework.elements.buttons.UIIcon;
 import mchorse.bbs_mod.ui.framework.elements.input.UITexturePicker;
+import mchorse.bbs_mod.ui.framework.elements.input.text.UITextbox;
 import mchorse.bbs_mod.ui.framework.elements.overlay.UIOverlay;
 import mchorse.bbs_mod.ui.framework.elements.overlay.UIStringOverlayPanel;
 import mchorse.bbs_mod.ui.framework.elements.utils.FontRenderer;
@@ -29,8 +37,11 @@ import mchorse.bbs_mod.ui.utils.icons.Icon;
 import mchorse.bbs_mod.ui.utils.icons.Icons;
 import mchorse.bbs_mod.utils.Direction;
 import mchorse.bbs_mod.utils.colors.Colors;
+import mchorse.bbs_mod.utils.keyframes.KeyframeChannel;
+import mchorse.bbs_mod.utils.keyframes.factories.KeyframeFactories;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
@@ -47,7 +58,9 @@ import java.util.WeakHashMap;
  * generation runs on decides which one is used. Billboards and extruded forms only have
  * textures.</p>
  *
- * <p>The picked row is shown on the form only while this tab is open, see {@link MouthPreview}.</p>
+ * <p>The picked row is shown on the form only while this tab is open, see {@link MouthPreview}.
+ * A phrase field at the top says a line with the shapes as they are, lighting up each row as its
+ * shape comes, so the whole map can be judged without a film.</p>
  */
 public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
 {
@@ -63,14 +76,23 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
     /** The row last picked for a form, for the same reason. */
     private static final Map<Form, Viseme> PICKED = new WeakHashMap<>();
 
+    /** The phrase to try the mouth on, kept for the session; starts as a sample using every shape. */
+    private static String phrase;
+
+    /** Extra ticks the closed mouth stays after a played phrase, before the picked row shows again. */
+    private static final float PLAY_TAIL = 10F;
+
     private final ModeSwitch mode;
     private final UIText status;
+    private final TextLipSync.Tables tables = new TextLipSync.Tables();
 
     private PoseLibrary poses;
     private TextureLibrary textures;
 
     /** What the shapes on screen were read for, see {@link #source()}. */
     private String loaded;
+
+    private Playback playback;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <F extends UIForm> F attach(F editor)
@@ -87,7 +109,41 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
         this.mode = new ModeSwitch();
         this.status = new UIText().color(Colors.GRAY, false);
 
-        this.options.add(this.mode);
+        if (phrase == null)
+        {
+            phrase = LipSyncKeys.FORM_SAMPLE.get();
+        }
+
+        UITextbox text = new UITextbox((string) -> phrase = string)
+        {
+            @Override
+            public boolean subKeyPressed(UIContext context)
+            {
+                if (this.isFocused() && (context.isPressed(GLFW.GLFW_KEY_ENTER) || context.isPressed(GLFW.GLFW_KEY_KP_ENTER)))
+                {
+                    play();
+
+                    return true;
+                }
+
+                return super.subKeyPressed(context);
+            }
+        };
+
+        text.setText(phrase);
+        text.tooltip(LipSyncKeys.FORM_PLAY_TOOLTIP);
+
+        /* Pause while a phrase is being said: a click stops it, the next one starts it over */
+        UIIcon play = new UIIcon(() -> this.playback != null ? Icons.PAUSE : Icons.PLAY, (b) -> this.togglePlay());
+        UIElement phraseRow = new UIElement();
+
+        play.tooltip(() -> (this.playback != null ? LipSyncKeys.FORM_STOP_TOOLTIP : LipSyncKeys.FORM_PLAY_TOOLTIP).get());
+        text.relative(phraseRow).w(1F, -UIConstants.CONTROL_HEIGHT - UIConstants.MARGIN).h(1F);
+        play.relative(phraseRow).x(1F, -UIConstants.CONTROL_HEIGHT).wh(UIConstants.CONTROL_HEIGHT, UIConstants.CONTROL_HEIGHT);
+        phraseRow.h(UIConstants.CONTROL_HEIGHT);
+        phraseRow.add(text, play);
+
+        this.options.add(this.mode, phraseRow);
 
         for (Viseme viseme : Viseme.values())
         {
@@ -100,6 +156,7 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
     @Override
     public void startEdit(T form)
     {
+        this.playback = null;
         MouthPreview.clear(this);
 
         super.startEdit(form);
@@ -115,6 +172,7 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
     @Override
     public void finishEdit()
     {
+        this.playback = null;
         MouthPreview.clear(this);
 
         super.finishEdit();
@@ -123,6 +181,7 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
     @Override
     protected void onRemove(UIElement parent)
     {
+        this.playback = null;
         MouthPreview.clear(this);
 
         super.onRemove(parent);
@@ -138,9 +197,15 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
             this.refresh();
         }
 
+        if (this.playback != null && !this.playback.step())
+        {
+            this.playback = null;
+            MouthPreview.clear(this);
+        }
+
         Viseme picked = this.form == null ? null : PICKED.get(this.form);
 
-        if (picked != null && !MouthPreview.isShownBy(this))
+        if (this.playback == null && picked != null && !MouthPreview.isShownBy(this))
         {
             this.preview(picked);
         }
@@ -189,6 +254,7 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
      */
     private void refresh()
     {
+        this.playback = null;
         MouthPreview.clear(this);
 
         this.poses = null;
@@ -283,6 +349,61 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
         this.refresh();
     }
 
+    private void togglePlay()
+    {
+        if (this.playback != null)
+        {
+            this.playback = null;
+            MouthPreview.clear(this);
+        }
+        else
+        {
+            this.play();
+        }
+    }
+
+    /**
+     * Says the phrase with the shapes as they are set up now: the same timing and keyframes a
+     * generation from text would write, played on the form in the preview instead.
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void play()
+    {
+        if (this.form == null || phrase == null || phrase.isBlank())
+        {
+            return;
+        }
+
+        MouthRig rig = this.textures != null ? this.textures : this.poses;
+        BaseValueBasic target = this.textures != null
+            ? (this.form.getBasic("texture") instanceof ValueLink texture ? texture : null)
+            : (this.form instanceof ModelForm model ? model.pose : null);
+
+        if (rig == null || target == null || !rig.isUsable())
+        {
+            return;
+        }
+
+        TextLipSync.Plan plan = TextLipSync.plan(phrase, LipSyncSettings.textSpeed(), this.tables);
+
+        if (!plan.hasSpeech())
+        {
+            return;
+        }
+
+        List<VisemeTimeline.Key> keys = rig.isSmooth()
+            ? VisemeTimeline.keys(plan.segments(), 0, plan.ticks(), 0F)
+            : VisemeTimeline.steps(plan.segments(), 0, plan.ticks(), 0F);
+        KeyframeChannel channel = new KeyframeChannel("preview", rig.isSmooth() ? KeyframeFactories.POSE : KeyframeFactories.LINK);
+
+        for (VisemeTimeline.Key key : keys)
+        {
+            KeyframeBaker.insert(channel, rig, key, key.tick());
+        }
+
+        this.playback = new Playback(channel, keys, target, plan.ticks() + PLAY_TAIL);
+    }
+
     private void preview(Viseme viseme)
     {
         if (this.textures != null && this.form.getBasic("texture") instanceof ValueLink texture)
@@ -292,6 +413,52 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
         else if (this.poses != null && this.form instanceof ModelForm model)
         {
             MouthPreview.show(this, model.pose, this.poses.value(viseme).copy());
+        }
+    }
+
+    /** A phrase being said on the form: its keyframes, read at the time that has passed since it started. */
+    private class Playback
+    {
+        private final KeyframeChannel<?> channel;
+        private final List<VisemeTimeline.Key> keys;
+        private final BaseValueBasic<?> target;
+        private final float length;
+        private final long start = System.currentTimeMillis();
+
+        /** The shape being said, for the rows to light up. */
+        private Viseme viseme = Viseme.IDLE;
+
+        Playback(KeyframeChannel<?> channel, List<VisemeTimeline.Key> keys, BaseValueBasic<?> target, float length)
+        {
+            this.channel = channel;
+            this.keys = keys;
+            this.target = target;
+            this.length = length;
+        }
+
+        /** @return false once the phrase is over */
+        boolean step()
+        {
+            float tick = (System.currentTimeMillis() - this.start) / 1000F * VisemeTimeline.TPS;
+
+            if (tick > this.length)
+            {
+                return false;
+            }
+
+            for (VisemeTimeline.Key key : this.keys)
+            {
+                if (key.tick() > tick)
+                {
+                    break;
+                }
+
+                this.viseme = key.viseme();
+            }
+
+            MouthPreview.show(UILipSyncFormPanel.this, this.target, this.channel.interpolate(tick));
+
+            return true;
         }
     }
 
@@ -421,7 +588,9 @@ public class UILipSyncFormPanel<T extends Form> extends UIFormPanel<T>
         {
             FontRenderer font = context.batcher.getFont();
             boolean hover = this.area.isInside(context);
-            boolean picked = form != null && PICKED.get(form) == this.viseme && MouthPreview.isShownBy(UILipSyncFormPanel.this);
+            boolean picked = playback != null
+                ? playback.viseme == this.viseme
+                : form != null && PICKED.get(form) == this.viseme && MouthPreview.isShownBy(UILipSyncFormPanel.this);
             boolean lit = hover || picked;
 
             if (hover)
