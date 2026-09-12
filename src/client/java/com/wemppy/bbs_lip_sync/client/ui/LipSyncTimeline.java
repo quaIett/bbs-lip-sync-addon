@@ -3,6 +3,7 @@ package com.wemppy.bbs_lip_sync.client.ui;
 import com.wemppy.bbs_lip_sync.client.LipSyncController;
 import com.wemppy.bbs_lip_sync.client.LipSyncJob;
 import com.wemppy.bbs_lip_sync.client.LipSyncKeys;
+import com.wemppy.bbs_lip_sync.client.TextLipSync;
 import com.wemppy.bbs_lip_sync.client.model.Language;
 import com.wemppy.bbs_lip_sync.client.model.Languages;
 import mchorse.bbs_mod.ui.film.replays.UIReplaysEditor;
@@ -53,6 +54,7 @@ public class LipSyncTimeline
             String name = language == null ? "?" : language.name;
 
             menu.action(Icons.VOICE, LipSyncKeys.GENERATE, () -> LipSyncController.generate(editor, sheet));
+            menu.action(Icons.FONT, LipSyncKeys.TEXT_GENERATE, () -> TextLipSync.open(editor, sheet));
             menu.action(Icons.GLOBE, LipSyncKeys.LANGUAGE.format(name), () -> LanguagePicker.open(context, (picked) -> {}));
         });
 

@@ -1,5 +1,6 @@
 package com.wemppy.bbs_lip_sync.client;
 
+import com.wemppy.bbs_lip_sync.client.phonemes.TextSpeech;
 import com.wemppy.bbs_lip_sync.client.settings.ValueSpeechLanguage;
 import mchorse.bbs_mod.settings.SettingsBuilder;
 import mchorse.bbs_mod.settings.values.core.ValueString;
@@ -38,6 +39,9 @@ public class LipSyncSettings
     /** How long (in ticks) the mouth keeps its last shape after a word before it closes. */
     public static ValueFloat closeDelay;
 
+    /** Speech speed of lip sync from text, 1 being ordinary speech. Set in the text dialog, so hidden here. */
+    public static ValueFloat textSpeed;
+
     public static void register(SettingsBuilder builder)
     {
         builder.category("speech", Icons.BUBBLE);
@@ -51,6 +55,8 @@ public class LipSyncSettings
         minHold = builder.getFloat("min_hold", 1F, 0.5F, 5F).slider(0.25D);
         minPause = builder.getFloat("min_pause", 10F, 3F, 40F).slider(1D);
         closeDelay = builder.getFloat("close_delay", 4F, 0F, 10F).slider(0.5D);
+        textSpeed = builder.getFloat("text_speed", 1F, TextSpeech.MIN_SPEED, TextSpeech.MAX_SPEED);
+        textSpeed.invisible();
     }
 
     public static String language()
@@ -86,5 +92,10 @@ public class LipSyncSettings
     public static float closeDelay()
     {
         return closeDelay == null ? 4F : closeDelay.get();
+    }
+
+    public static float textSpeed()
+    {
+        return textSpeed == null ? 1F : TextSpeech.clampSpeed(textSpeed.get());
     }
 }

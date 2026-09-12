@@ -2,7 +2,16 @@
     "bbs_lip_sync.ui.generate": "Generate lip sync",
     "bbs_lip_sync.ui.cancel": "Cancel lip sync",
     "bbs_lip_sync.ui.language": "Speech language: %s",
-    "bbs_lip_sync.ui.pick_language.title": "Which language is spoken in the audio?",
+    "bbs_lip_sync.ui.pick_language.title": "Which language does the character speak?",
+
+    "bbs_lip_sync.ui.text.generate": "Lip sync from text",
+    "bbs_lip_sync.ui.text.title": "Lip sync from text",
+    "bbs_lip_sync.ui.text.placeholder": "The character's line. A comma is a short pause, a full stop or a new line closes the mouth.",
+    "bbs_lip_sync.ui.text.speed": "Speech speed",
+    "bbs_lip_sync.ui.text.speed_tooltip": "1 is an ordinary pace, 2 twice as fast. Pauses stay the same.",
+    "bbs_lip_sync.ui.text.duration": "%s s · %s ticks",
+    "bbs_lip_sync.ui.text.no_letters": "No letters to animate",
+    "bbs_lip_sync.ui.text.button": "Generate",
 
     "bbs_lip_sync.ui.pick_audio.title": "Which audio clip is spoken?",
     "bbs_lip_sync.ui.no_audio.title": "No audio",

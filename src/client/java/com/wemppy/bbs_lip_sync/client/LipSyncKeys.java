@@ -11,6 +11,15 @@ public class LipSyncKeys
     public static final IKey LANGUAGE = L10n.lang("bbs_lip_sync.ui.language");
     public static final IKey PICK_LANGUAGE_TITLE = L10n.lang("bbs_lip_sync.ui.pick_language.title");
 
+    public static final IKey TEXT_GENERATE = L10n.lang("bbs_lip_sync.ui.text.generate");
+    public static final IKey TEXT_TITLE = L10n.lang("bbs_lip_sync.ui.text.title");
+    public static final IKey TEXT_PLACEHOLDER = L10n.lang("bbs_lip_sync.ui.text.placeholder");
+    public static final IKey TEXT_SPEED = L10n.lang("bbs_lip_sync.ui.text.speed");
+    public static final IKey TEXT_SPEED_TOOLTIP = L10n.lang("bbs_lip_sync.ui.text.speed_tooltip");
+    public static final IKey TEXT_DURATION = L10n.lang("bbs_lip_sync.ui.text.duration");
+    public static final IKey TEXT_NO_LETTERS = L10n.lang("bbs_lip_sync.ui.text.no_letters");
+    public static final IKey TEXT_BUTTON = L10n.lang("bbs_lip_sync.ui.text.button");
+
     public static final IKey PICK_AUDIO_TITLE = L10n.lang("bbs_lip_sync.ui.pick_audio.title");
     public static final IKey NO_AUDIO_TITLE = L10n.lang("bbs_lip_sync.ui.no_audio.title");
     public static final IKey NO_AUDIO_MESSAGE = L10n.lang("bbs_lip_sync.ui.no_audio.message");

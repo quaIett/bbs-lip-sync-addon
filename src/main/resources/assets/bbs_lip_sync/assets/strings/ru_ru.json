@@ -2,7 +2,16 @@
     "bbs_lip_sync.ui.generate": "Сгенерировать липсинк",
     "bbs_lip_sync.ui.cancel": "Отменить липсинк",
     "bbs_lip_sync.ui.language": "Язык речи: %s",
-    "bbs_lip_sync.ui.pick_language.title": "На каком языке говорят в аудио?",
+    "bbs_lip_sync.ui.pick_language.title": "На каком языке говорит персонаж?",
+
+    "bbs_lip_sync.ui.text.generate": "Липсинк из текста",
+    "bbs_lip_sync.ui.text.title": "Липсинк из текста",
+    "bbs_lip_sync.ui.text.placeholder": "Реплика персонажа. Запятая — короткая пауза, точка или новая строка — рот закрывается.",
+    "bbs_lip_sync.ui.text.speed": "Скорость речи",
+    "bbs_lip_sync.ui.text.speed_tooltip": "1 — обычный темп, 2 — вдвое быстрее. Паузы не меняются.",
+    "bbs_lip_sync.ui.text.duration": "%s с · тиков: %s",
+    "bbs_lip_sync.ui.text.no_letters": "Нет букв для анимации",
+    "bbs_lip_sync.ui.text.button": "Сгенерировать",
 
     "bbs_lip_sync.ui.pick_audio.title": "Какой аудиоклип озвучивать?",
     "bbs_lip_sync.ui.no_audio.title": "Нет аудио",
