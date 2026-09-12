@@ -39,6 +39,12 @@ public class VisemeTimeline
     /** A lip closure is shown for at least this long (ticks). */
     private static final float CLOSURE_MIN = 1F;
 
+    /**
+     * Pictures swap instantly, so a shape shorter than this (ticks) flashes rather than moves and
+     * joins its neighbour; lip closures still keep their {@link #CLOSURE_MIN}.
+     */
+    private static final float STEP_MIN = 1.5F;
+
     /** Nothing shorter than this (ticks) becomes a keyframe. */
     private static final float MIN_GAP = 0.5F;
 
@@ -382,6 +388,95 @@ public class VisemeTimeline
         }
 
         return keys;
+    }
+
+    /**
+     * Keyframes for pictures, which switch instead of easing: one at the start of every shape, the
+     * too short ones merged away first, and the closed mouth at the clip start and after the last
+     * word. No hold keyframes, since a constant keyframe holds by itself.
+     */
+    public static List<Key> steps(List<Segment> segments, int clipTick, int clipDuration, float anticipation)
+    {
+        List<Key> keys = new ArrayList<>();
+
+        if (segments.isEmpty())
+        {
+            return keys;
+        }
+
+        List<Segment> merged = new ArrayList<>(segments);
+
+        absorbFlashes(merged, STEP_MIN / TPS);
+        mergeSame(merged);
+
+        float first = clipTick;
+        float last = clipTick + clipDuration - MIN_GAP;
+        Segment head = merged.get(0);
+
+        if (head.viseme() != Viseme.IDLE && clipTick + head.start() * TPS - anticipation >= clipTick + MIN_GAP)
+        {
+            add(keys, Viseme.IDLE, clipTick, false, first, last);
+        }
+
+        for (Segment segment : merged)
+        {
+            add(keys, segment.viseme(), clipTick + segment.start() * TPS - anticipation, false, first, last);
+        }
+
+        Segment tail = merged.get(merged.size() - 1);
+
+        if (tail.viseme() != Viseme.IDLE)
+        {
+            add(keys, Viseme.IDLE, clipTick + tail.end() * TPS - anticipation, false, first, last);
+        }
+
+        return keys;
+    }
+
+    /**
+     * For pictures: a shape too short to see joins the longer of its open neighbours. It never
+     * joins a lip closure or a pause, which would keep the mouth shut through a vowel; with no open
+     * neighbour it stays, since it's the only opening there is.
+     */
+    private static void absorbFlashes(List<Segment> segments, float min)
+    {
+        for (int i = 0; i < segments.size(); )
+        {
+            Segment segment = segments.get(i);
+            boolean closure = segment.viseme().isClosure() && segment.length() >= CLOSURE_MIN / TPS - 0.0001F;
+
+            if (segment.viseme() == Viseme.IDLE || closure || segment.length() >= min - 0.0001F)
+            {
+                i++;
+
+                continue;
+            }
+
+            Segment prev = i > 0 && isOpen(segments.get(i - 1)) ? segments.get(i - 1) : null;
+            Segment next = i + 1 < segments.size() && isOpen(segments.get(i + 1)) ? segments.get(i + 1) : null;
+
+            if (next != null && (prev == null || next.length() >= prev.length()))
+            {
+                segments.set(i + 1, next.from(segment.start()));
+            }
+            else if (prev != null)
+            {
+                segments.set(i - 1, prev.to(segment.end()));
+            }
+            else
+            {
+                i++;
+
+                continue;
+            }
+
+            segments.remove(i);
+        }
+    }
+
+    private static boolean isOpen(Segment segment)
+    {
+        return segment.viseme() != Viseme.IDLE && !segment.viseme().isClosure();
     }
 
     private static void add(List<Key> keys, Viseme viseme, float tick, boolean hold, float first, float last)

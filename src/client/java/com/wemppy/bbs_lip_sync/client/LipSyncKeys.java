@@ -1,5 +1,6 @@
 package com.wemppy.bbs_lip_sync.client;
 
+import com.wemppy.bbs_lip_sync.client.phonemes.Viseme;
 import mchorse.bbs_mod.l10n.L10n;
 import mchorse.bbs_mod.l10n.keys.IKey;
 
@@ -23,8 +24,18 @@ public class LipSyncKeys
     public static final IKey PICK_AUDIO_TITLE = L10n.lang("bbs_lip_sync.ui.pick_audio.title");
     public static final IKey NO_AUDIO_TITLE = L10n.lang("bbs_lip_sync.ui.no_audio.title");
     public static final IKey NO_AUDIO_MESSAGE = L10n.lang("bbs_lip_sync.ui.no_audio.message");
-    public static final IKey NO_POSES_TITLE = L10n.lang("bbs_lip_sync.ui.no_poses.title");
-    public static final IKey NO_POSES_MESSAGE = L10n.lang("bbs_lip_sync.ui.no_poses.message");
+    public static final IKey NO_SHAPES_TITLE = L10n.lang("bbs_lip_sync.ui.no_shapes.title");
+    public static final IKey NO_SHAPES_MESSAGE = L10n.lang("bbs_lip_sync.ui.no_shapes.message");
+    public static final IKey NO_TEXTURE_MESSAGE = L10n.lang("bbs_lip_sync.ui.no_shapes.no_texture");
+
+    public static final IKey FORM_TITLE = L10n.lang("bbs_lip_sync.ui.form.title");
+    public static final IKey FORM_POSES = L10n.lang("bbs_lip_sync.ui.form.poses");
+    public static final IKey FORM_TEXTURES = L10n.lang("bbs_lip_sync.ui.form.textures");
+    public static final IKey FORM_NOT_ENOUGH = L10n.lang("bbs_lip_sync.ui.form.not_enough");
+    public static final IKey FORM_NO_POSES = L10n.lang("bbs_lip_sync.ui.form.no_poses");
+    public static final IKey FORM_NO_TEXTURE = L10n.lang("bbs_lip_sync.ui.form.no_texture");
+    public static final IKey FORM_PICK_POSE = L10n.lang("bbs_lip_sync.ui.form.pick_pose");
+    public static final IKey FORM_RESET = L10n.lang("bbs_lip_sync.ui.form.reset");
 
     public static final IKey ERROR_TITLE = L10n.lang("bbs_lip_sync.ui.error.title");
     public static final IKey ERROR_AUDIO_UNREADABLE = L10n.lang("bbs_lip_sync.ui.error.audio_unreadable");
@@ -66,6 +77,18 @@ public class LipSyncKeys
     public static final IKey CONFIG_MODEL_SMALL = L10n.lang("bbs_lip_sync.config.speech.model_size.small");
     public static final IKey CONFIG_MODEL_LARGE = L10n.lang("bbs_lip_sync.config.speech.model_size.large");
     public static final IKey CONFIG_LANGUAGE_GAME = L10n.lang("bbs_lip_sync.config.speech.language.game");
+
+    /** A shape as people read it: its main letter, or «closed» for the idle mouth. */
+    public static IKey shape(Viseme viseme)
+    {
+        return L10n.lang("bbs_lip_sync.ui.shape." + viseme.id);
+    }
+
+    /** The other letters that make the shape; may be empty. */
+    public static IKey shapeMore(Viseme viseme)
+    {
+        return L10n.lang("bbs_lip_sync.ui.shape." + viseme.id + ".more");
+    }
 
     /** A download size for people: {@code 45 МБ}, {@code 1.8 ГБ}. */
     public static String size(int megabytes)

@@ -1,8 +1,8 @@
 package com.wemppy.bbs_lip_sync.client;
 
 import com.wemppy.bbs_lip_sync.client.audio.AudioExtractor;
-import com.wemppy.bbs_lip_sync.client.bake.PoseBaker;
-import com.wemppy.bbs_lip_sync.client.bake.PoseLibrary;
+import com.wemppy.bbs_lip_sync.client.bake.KeyframeBaker;
+import com.wemppy.bbs_lip_sync.client.bake.MouthRig;
 import com.wemppy.bbs_lip_sync.client.model.Language;
 import com.wemppy.bbs_lip_sync.client.model.ModelStore;
 import com.wemppy.bbs_lip_sync.client.model.SpeechRecognizer;
@@ -13,7 +13,6 @@ import mchorse.bbs_mod.film.replays.Replay;
 import mchorse.bbs_mod.l10n.keys.IKey;
 import mchorse.bbs_mod.resources.Link;
 import mchorse.bbs_mod.utils.keyframes.KeyframeChannel;
-import mchorse.bbs_mod.utils.pose.Pose;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.IOException;
@@ -36,14 +35,14 @@ public class LipSyncJob
 
     private static volatile LipSyncJob current;
 
-    public final KeyframeChannel<Pose> channel;
+    public final KeyframeChannel channel;
     public final int clipTick;
     public final int clipDuration;
 
     private final Replay replay;
     private final Link audio;
     private final int offset;
-    private final PoseLibrary poses;
+    private final MouthRig rig;
     private final Language language;
     private final Language.Model model;
     private final Runnable onBaked;
@@ -55,11 +54,11 @@ public class LipSyncJob
     private volatile long finishedAt;
     private volatile int written;
 
-    public LipSyncJob(Replay replay, KeyframeChannel<Pose> channel, PoseLibrary poses, Language language, Language.Model model, Link audio, int offset, int clipTick, int clipDuration, Runnable onBaked, Consumer<IKey> onError)
+    public LipSyncJob(Replay replay, KeyframeChannel channel, MouthRig rig, Language language, Language.Model model, Link audio, int offset, int clipTick, int clipDuration, Runnable onBaked, Consumer<IKey> onError)
     {
         this.replay = replay;
         this.channel = channel;
-        this.poses = poses;
+        this.rig = rig;
         this.language = language;
         this.model = model;
         this.audio = audio;
@@ -127,6 +126,7 @@ public class LipSyncJob
         thread.start();
     }
 
+    @SuppressWarnings("unchecked")
     private void run()
     {
         try
@@ -185,7 +185,9 @@ public class LipSyncJob
                 return;
             }
 
-            List<VisemeTimeline.Key> keys = VisemeTimeline.keys(segments, this.clipTick, this.clipDuration, LipSyncSettings.anticipation());
+            List<VisemeTimeline.Key> keys = this.rig.isSmooth()
+                ? VisemeTimeline.keys(segments, this.clipTick, this.clipDuration, LipSyncSettings.anticipation())
+                : VisemeTimeline.steps(segments, this.clipTick, this.clipDuration, LipSyncSettings.anticipation());
 
             MinecraftClient.getInstance().execute(() ->
             {
@@ -198,7 +200,7 @@ public class LipSyncJob
 
                 try
                 {
-                    this.written = PoseBaker.bake(this.replay, this.channel, this.poses, keys, this.clipTick, this.clipDuration);
+                    this.written = KeyframeBaker.bake(this.replay, this.channel, this.rig, keys, this.clipTick, this.clipDuration);
                     this.onBaked.run();
                     this.finish(Stage.DONE);
                 }

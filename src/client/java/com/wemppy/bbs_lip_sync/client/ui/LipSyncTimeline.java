@@ -3,6 +3,7 @@ package com.wemppy.bbs_lip_sync.client.ui;
 import com.wemppy.bbs_lip_sync.client.LipSyncController;
 import com.wemppy.bbs_lip_sync.client.LipSyncJob;
 import com.wemppy.bbs_lip_sync.client.LipSyncKeys;
+import com.wemppy.bbs_lip_sync.client.LipSyncTarget;
 import com.wemppy.bbs_lip_sync.client.TextLipSync;
 import com.wemppy.bbs_lip_sync.client.model.Language;
 import com.wemppy.bbs_lip_sync.client.model.Languages;
@@ -14,7 +15,7 @@ import mchorse.bbs_mod.ui.framework.elements.utils.UIRenderable;
 import mchorse.bbs_mod.ui.utils.icons.Icons;
 
 /**
- * Hooks the addon into the replay keyframe timeline: context menu entries on pose tracks and a
+ * Hooks the addon into the replay keyframe timeline: context menu entries on pose and texture tracks and a
  * painter that draws the running job over its row. Called after every rebuild of the editor.
  */
 public class LipSyncTimeline
@@ -33,7 +34,7 @@ public class LipSyncTimeline
             UIContext context = editor.getContext();
             UIKeyframeSheet sheet = context == null ? null : keyframeEditor.view.getGraph().getSheet(context.mouseY);
 
-            if (sheet == null || sheet.header || sheet.getPoseForm() == null)
+            if (LipSyncTarget.of(sheet) == null)
             {
                 return;
             }

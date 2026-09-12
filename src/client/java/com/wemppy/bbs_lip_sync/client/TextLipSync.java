@@ -1,7 +1,7 @@
 package com.wemppy.bbs_lip_sync.client;
 
-import com.wemppy.bbs_lip_sync.client.bake.PoseBaker;
-import com.wemppy.bbs_lip_sync.client.bake.PoseLibrary;
+import com.wemppy.bbs_lip_sync.client.bake.KeyframeBaker;
+import com.wemppy.bbs_lip_sync.client.bake.MouthRig;
 import com.wemppy.bbs_lip_sync.client.model.Language;
 import com.wemppy.bbs_lip_sync.client.model.Languages;
 import com.wemppy.bbs_lip_sync.client.model.Word;
@@ -10,14 +10,12 @@ import com.wemppy.bbs_lip_sync.client.phonemes.TextSpeech;
 import com.wemppy.bbs_lip_sync.client.phonemes.VisemeTimeline;
 import com.wemppy.bbs_lip_sync.client.ui.UITextLipSyncOverlayPanel;
 import mchorse.bbs_mod.film.replays.Replay;
-import mchorse.bbs_mod.forms.forms.ModelForm;
 import mchorse.bbs_mod.ui.film.UIFilmPanel;
 import mchorse.bbs_mod.ui.film.replays.UIReplaysEditor;
 import mchorse.bbs_mod.ui.framework.UIContext;
 import mchorse.bbs_mod.ui.framework.elements.input.keyframes.UIKeyframeSheet;
 import mchorse.bbs_mod.ui.framework.elements.overlay.UIOverlay;
 import mchorse.bbs_mod.utils.keyframes.KeyframeChannel;
-import mchorse.bbs_mod.utils.pose.Pose;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -39,7 +37,7 @@ public class TextLipSync
      * Where the last text went. Redone on the same spot at a faster speed, it is shorter than
      * before, and the old keyframes past its new end have to go too.
      */
-    private static WeakReference<KeyframeChannel<Pose>> lastChannel = new WeakReference<>(null);
+    private static WeakReference<KeyframeChannel> lastChannel = new WeakReference<>(null);
     private static int lastTick;
     private static int lastTicks;
 
@@ -52,36 +50,30 @@ public class TextLipSync
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static void open(UIReplaysEditor editor, UIKeyframeSheet sheet)
     {
         UIFilmPanel panel = editor.getParent(UIFilmPanel.class);
         Replay replay = editor.getReplay();
-        ModelForm form = sheet.getPoseForm();
+        LipSyncTarget target = LipSyncTarget.of(sheet);
         UIContext context = editor.getContext();
 
-        if (panel == null || replay == null || form == null || context == null || LipSyncJob.isBusy())
+        if (panel == null || replay == null || target == null || context == null || LipSyncJob.isBusy())
         {
             return;
         }
 
-        String modelId = form.model.get();
-        PoseLibrary poses = PoseLibrary.of(modelId);
+        MouthRig<?> rig = target.usableRig(context);
 
-        if (!poses.isUsable())
+        if (rig == null)
         {
-            LipSyncController.message(context, LipSyncKeys.NO_POSES_TITLE, LipSyncKeys.NO_POSES_MESSAGE.format(modelId));
-
             return;
         }
-
-        KeyframeChannel<Pose> channel = (KeyframeChannel<Pose>) sheet.channel;
 
         UIOverlay.addOverlay(context, new UITextLipSyncOverlayPanel((plan) ->
         {
             if (!LipSyncJob.isBusy() && plan.hasSpeech())
             {
-                bake(editor, panel, replay, channel, poses, panel.getCursor(), plan);
+                bake(editor, panel, replay, target.channel(), rig, panel.getCursor(), plan);
             }
         }));
     }
@@ -103,12 +95,15 @@ public class TextLipSync
     }
 
     /** No anticipation: with no sound to get ahead of, the text's timing is the mouth's. */
-    private static void bake(UIReplaysEditor editor, UIFilmPanel panel, Replay replay, KeyframeChannel<Pose> channel, PoseLibrary poses, int tick, Plan plan)
+    @SuppressWarnings("unchecked")
+    private static void bake(UIReplaysEditor editor, UIFilmPanel panel, Replay replay, KeyframeChannel channel, MouthRig rig, int tick, Plan plan)
     {
-        List<VisemeTimeline.Key> keys = VisemeTimeline.keys(plan.segments(), tick, plan.ticks(), 0F);
+        List<VisemeTimeline.Key> keys = rig.isSmooth()
+            ? VisemeTimeline.keys(plan.segments(), tick, plan.ticks(), 0F)
+            : VisemeTimeline.steps(plan.segments(), tick, plan.ticks(), 0F);
         int range = lastChannel.get() == channel && lastTick == tick ? Math.max(plan.ticks(), lastTicks) : plan.ticks();
 
-        PoseBaker.bake(replay, channel, poses, keys, tick, range);
+        KeyframeBaker.bake(replay, channel, rig, keys, tick, range);
         panel.getUndoHandler().getUndoManager().markLastUndoNoMerging();
         editor.updateChannelsList();
 
