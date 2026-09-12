@@ -51,7 +51,7 @@
     "bbs_lip_sync.config.speech.title": "Речь",
     "bbs_lip_sync.config.speech.tooltip": "Какой язык и какая модель слушают аудио",
     "bbs_lip_sync.config.speech.language": "Язык",
-    "bbs_lip_sync.config.speech.language-comment": "На каком языке говорят в аудио. «Язык игры» берёт язык Minecraft. Левый клик листает вперёд, правый назад. Ещё язык можно сменить в меню дорожки, пункт «Язык речи».",
+    "bbs_lip_sync.config.speech.language-comment": "На каком языке говорят в аудио. По умолчанию берётся язык Minecraft, вернуть его можно правым кликом. Тот же список открывается в меню дорожки, пункт «Язык речи».",
     "bbs_lip_sync.config.speech.language.game": "Язык игры",
     "bbs_lip_sync.config.speech.model_size": "Модель",
     "bbs_lip_sync.config.speech.model_size-comment": "Маленькая (30–140 МБ) быстрая, и для липсинка её хватает. Большая (до 2 ГБ) точнее слышит слова, но дольше грузится и занимает много памяти; есть не для всех языков.",

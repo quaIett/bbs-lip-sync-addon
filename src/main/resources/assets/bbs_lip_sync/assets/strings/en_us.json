@@ -51,7 +51,7 @@
     "bbs_lip_sync.config.speech.title": "Speech",
     "bbs_lip_sync.config.speech.tooltip": "Which language and model listen to the audio",
     "bbs_lip_sync.config.speech.language": "Language",
-    "bbs_lip_sync.config.speech.language-comment": "The language spoken in the audio. \"Game language\" follows Minecraft's. Left click goes forward, right click back. It can also be changed from the track's menu: \"Speech language\".",
+    "bbs_lip_sync.config.speech.language-comment": "The language spoken in the audio. By default it follows Minecraft's; right click brings that back. The same list opens from the track's menu: \"Speech language\".",
     "bbs_lip_sync.config.speech.language.game": "Game language",
     "bbs_lip_sync.config.speech.model_size": "Model",
     "bbs_lip_sync.config.speech.model_size-comment": "Small (30–140 MB) is fast and good enough for lip sync. Large (up to 2 GB) hears words more accurately but loads slowly and takes a lot of memory; not every language has one.",
