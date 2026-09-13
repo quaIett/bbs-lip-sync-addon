@@ -3,7 +3,17 @@ plugins {
     id 'maven-publish'
 }
 
-version = project.mod_version
+// Minecraft, Fabric API and Java versions of the build target, see gradle.properties
+def target = file("versions/${project.mc}.properties")
+if (!target.exists()) {
+    def known = file("versions").list().findAll { it.endsWith(".properties") }.collect { it - ".properties" }.sort()
+    throw new GradleException("Unknown Minecraft version ${project.mc}, known: ${known.join(", ")}")
+}
+def targetProperties = new Properties()
+target.withInputStream { targetProperties.load(it) }
+targetProperties.each { key, value -> project.ext.set(key, value) }
+
+version = "${project.mod_version}+${project.minecraft_version}"
 group = project.maven_group
 
 base {
@@ -37,7 +47,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation files("libs/bbs-2.6-1.20.1.jar")
+    modImplementation files("libs/bbs-${project.bbs_version}-${project.minecraft_version}.jar")
 
     // Vosk (Kaldi) speech recognition, bundled into the mod jar (jar-in-jar). The jar carries the
     // natives for Windows x64, Linux x64 and macOS (Intel + Apple Silicon); its only dependency,
@@ -46,20 +56,22 @@ dependencies {
     include "com.alphacephei:vosk:${project.vosk_version}"
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
+tasks.withType(ProcessResources).configureEach {
+    def replacements = [
+            "version"             : project.version,
+            "minecraft_dependency": project.minecraft_dependency,
+            "loader_version"      : project.loader_version,
+            "java_version"        : project.java_version
+    ]
+    inputs.properties replacements
     filteringCharset "UTF-8"
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+    filesMatching(["fabric.mod.json", "*.mixins.json"]) {
+        expand replacements
     }
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = project.java_version as int
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
