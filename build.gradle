@@ -23,6 +23,17 @@ base {
 loom {
     splitEnvironmentSourceSets()
 
+    // Optional workaround for Windows JDK loopback failures in WEPollSelectorImpl.
+    // Enable with: gradlew runClient -PwindowsSelector
+    if (providers.gradleProperty('windowsSelector').isPresent()
+            && System.getProperty('os.name').startsWith('Windows')) {
+        runs {
+            client {
+                vmArg '-Djava.nio.channels.spi.SelectorProvider=sun.nio.ch.WindowsSelectorProvider'
+            }
+        }
+    }
+
     mods {
         "bbs_lip_sync" {
             sourceSet sourceSets.main
