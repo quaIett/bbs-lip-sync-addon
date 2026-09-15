@@ -23,13 +23,12 @@ base {
 loom {
     splitEnvironmentSourceSets()
 
-    // Optional workaround for Windows JDK loopback failures in WEPollSelectorImpl.
-    // Enable with: gradlew runClient -PwindowsSelector
-    if (providers.gradleProperty('windowsSelector').isPresent()
-            && System.getProperty('os.name').startsWith('Windows')) {
+    // Keep Windows JDK selector sockets in the writable run directory instead of TEMP.
+    // A short relative path also avoids the Unix-domain socket address length limit.
+    if (System.getProperty('os.name').startsWith('Windows')) {
         runs {
             client {
-                vmArg '-Djava.nio.channels.spi.SelectorProvider=sun.nio.ch.WindowsSelectorProvider'
+                vmArg '-Djdk.net.unixdomain.tmpdir=.'
             }
         }
     }
