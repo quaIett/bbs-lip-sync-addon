@@ -22,7 +22,7 @@ BBS Lip Sync — аддон для BBS. Он превращает речь из 
 - BBS 2.7 для той же версии Minecraft
 - Липсинк из аудио работает на Windows x64, Linux x64 и macOS. Липсинк из текста работает везде.
 
-Установка: положите jar аддона для своей версии Minecraft (`BBSLipSync-1.0.1+1.21.1.jar` и т. п.) в папку `mods` рядом с BBS.
+Установка: положите jar аддона для своей версии Minecraft (`BBSLipSync-1.0.2+1.21.1.jar` и т. п.) в папку `mods` рядом с BBS.
 
 ### Липсинк из аудио
 
@@ -127,7 +127,7 @@ BBS Lip Sync is an addon for BBS. It turns speech from an audio clip, or plain t
 - BBS 2.7 for the same Minecraft version
 - Lip sync from audio runs on Windows x64, Linux x64 and macOS. Lip sync from text runs anywhere.
 
-Installation: put the addon jar for your Minecraft version (`BBSLipSync-1.0.1+1.21.1.jar` and such) into the `mods` folder next to BBS.
+Installation: put the addon jar for your Minecraft version (`BBSLipSync-1.0.2+1.21.1.jar` and such) into the `mods` folder next to BBS.
 
 ### Lip sync from audio
 
