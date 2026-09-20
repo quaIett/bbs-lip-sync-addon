@@ -19,10 +19,10 @@ BBS Lip Sync — аддон для BBS. Он превращает речь из 
 ### Требования
 
 - Minecraft 1.20.1, 1.20.4, 1.21.1 или 1.21.11, Fabric Loader, Fabric API
-- BBS 2.6 для той же версии Minecraft
+- BBS 2.7 для той же версии Minecraft
 - Липсинк из аудио работает на Windows x64, Linux x64 и macOS. Липсинк из текста работает везде.
 
-Установка: положите jar аддона для своей версии Minecraft (`BBSLipSync-1.0+1.21.1.jar` и т. п.) в папку `mods` рядом с BBS.
+Установка: положите jar аддона для своей версии Minecraft (`BBSLipSync-1.0.1+1.21.1.jar` и т. п.) в папку `mods` рядом с BBS.
 
 ### Липсинк из аудио
 
@@ -124,10 +124,10 @@ BBS Lip Sync is an addon for BBS. It turns speech from an audio clip, or plain t
 ### Requirements
 
 - Minecraft 1.20.1, 1.20.4, 1.21.1 or 1.21.11, Fabric Loader, Fabric API
-- BBS 2.6 for the same Minecraft version
+- BBS 2.7 for the same Minecraft version
 - Lip sync from audio runs on Windows x64, Linux x64 and macOS. Lip sync from text runs anywhere.
 
-Installation: put the addon jar for your Minecraft version (`BBSLipSync-1.0+1.21.1.jar` and such) into the `mods` folder next to BBS.
+Installation: put the addon jar for your Minecraft version (`BBSLipSync-1.0.1+1.21.1.jar` and such) into the `mods` folder next to BBS.
 
 ### Lip sync from audio
 
@@ -235,9 +235,9 @@ One source tree builds every Minecraft version. The default is 1.20.1 (`mc` in `
 
 In PowerShell, quote the property, otherwise it gets split at the dot / В PowerShell свойство нужно взять в кавычки, иначе оно разобьётся по точке: `.\gradlew.bat build "-Pmc=1.21.1"`.
 
-The jar lands in `build/libs/BBSLipSync-<version>+<minecraft>.jar`. Each version takes its Minecraft, yarn, Fabric API and Java versions from `versions/<minecraft>.properties` and compiles against `libs/bbs-2.6-<minecraft>.jar`.
+The jar lands in `build/libs/BBSLipSync-<version>+<minecraft>.jar`. Each version takes its Minecraft, yarn, Fabric API and Java versions from `versions/<minecraft>.properties` and compiles against `libs/bbs-2.7-<minecraft>.jar`.
 
-Jar появляется в `build/libs/BBSLipSync-<версия>+<minecraft>.jar`. Версии Minecraft, yarn, Fabric API и Java берутся из `versions/<minecraft>.properties`, компиляция идёт против `libs/bbs-2.6-<minecraft>.jar`.
+Jar появляется в `build/libs/BBSLipSync-<версия>+<minecraft>.jar`. Версии Minecraft, yarn, Fabric API и Java берутся из `versions/<minecraft>.properties`, компиляция идёт против `libs/bbs-2.7-<minecraft>.jar`.
 
 ---
 

@@ -25,7 +25,9 @@ public record LipSyncTarget(KeyframeChannel channel, Form form, boolean textures
     /** The target behind a timeline row, or null if lip sync can't write there. */
     public static LipSyncTarget of(UIKeyframeSheet sheet)
     {
-        if (sheet == null || sheet.header)
+        /* Only property-backed tracks can drive a mouth. BBS 2.7 keeps section headers
+         * outside UIKeyframeSheet; solver tracks have no mouth property. */
+        if (sheet == null || sheet.property == null)
         {
             return null;
         }
