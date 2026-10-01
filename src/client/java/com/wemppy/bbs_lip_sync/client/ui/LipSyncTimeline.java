@@ -32,7 +32,7 @@ public class LipSyncTimeline
         keyframeEditor.view.context((menu) ->
         {
             UIContext context = editor.getContext();
-            UIKeyframeSheet sheet = context == null ? null : keyframeEditor.view.getGraph().getSheet(context.mouseY);
+            UIKeyframeSheet sheet = context == null ? null : keyframeEditor.view.getGraph().getSheet(context.mouseX, context.mouseY);
 
             if (LipSyncTarget.of(sheet) == null)
             {

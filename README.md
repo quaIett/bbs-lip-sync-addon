@@ -18,11 +18,11 @@ BBS Lip Sync — аддон для BBS. Он превращает речь из 
 
 ### Требования
 
-- Minecraft 1.20.1, 1.20.4, 1.21.1 или 1.21.11, Fabric Loader, Fabric API
-- BBS 2.7 для той же версии Minecraft
+- Minecraft 1.20.1 или 1.20.4, Fabric Loader, Fabric API
+- BBS 2.8 для той же версии Minecraft
 - Липсинк из аудио работает на Windows x64, Linux x64 и macOS. Липсинк из текста работает везде.
 
-Установка: положите jar аддона для своей версии Minecraft (`BBSLipSync-1.0.2+1.21.1.jar` и т. п.) в папку `mods` рядом с BBS.
+Установка: положите jar аддона для своей версии Minecraft (`BBSLipSync-1.0.3+1.20.1.jar` и т. п.) в папку `mods` рядом с BBS.
 
 ### Липсинк из аудио
 
@@ -123,11 +123,11 @@ BBS Lip Sync is an addon for BBS. It turns speech from an audio clip, or plain t
 
 ### Requirements
 
-- Minecraft 1.20.1, 1.20.4, 1.21.1 or 1.21.11, Fabric Loader, Fabric API
-- BBS 2.7 for the same Minecraft version
+- Minecraft 1.20.1 or 1.20.4, Fabric Loader, Fabric API
+- BBS 2.8 for the same Minecraft version
 - Lip sync from audio runs on Windows x64, Linux x64 and macOS. Lip sync from text runs anywhere.
 
-Installation: put the addon jar for your Minecraft version (`BBSLipSync-1.0.2+1.21.1.jar` and such) into the `mods` folder next to BBS.
+Installation: put the addon jar for your Minecraft version (`BBSLipSync-1.0.3+1.20.1.jar` and such) into the `mods` folder next to BBS.
 
 ### Lip sync from audio
 
@@ -224,22 +224,26 @@ A language's letter table can be overridden with `config/bbs/lipsync/letters/<co
 
 ## Building / Сборка
 
-One source tree builds every Minecraft version. The default is 1.20.1 (`mc` in `gradle.properties`); pick another with `-Pmc`:
+FS 2.8 builds are provided for Minecraft 1.20.1 and 1.20.4 from one source tree. The 1.21.x target configurations are retained but have not been updated or verified for this release. The default is 1.20.1 (`mc` in `gradle.properties`); pick another with `-Pmc`:
 
-Один код собирается под все версии Minecraft. По умолчанию 1.20.1 (`mc` в `gradle.properties`), другая версия выбирается через `-Pmc`:
+Сборки под FS 2.8 подготовлены для Minecraft 1.20.1 и 1.20.4 из одного дерева исходников. Конфигурации 1.21.x сохранены, но для этого выпуска не обновлялись и не проверялись. По умолчанию 1.20.1 (`mc` в `gradle.properties`), другая версия выбирается через `-Pmc`:
 
 ```
 ./gradlew build
-./gradlew build -Pmc=1.21.1
+./gradlew build -Pmc=1.20.4
 ```
 
-In PowerShell, quote the property, otherwise it gets split at the dot / В PowerShell свойство нужно взять в кавычки, иначе оно разобьётся по точке: `.\gradlew.bat build "-Pmc=1.21.1"`.
+In PowerShell, quote the property, otherwise it gets split at the dot / В PowerShell свойство нужно взять в кавычки, иначе оно разобьётся по точке: `.\gradlew.bat build "-Pmc=1.20.4"`.
 
-The jar lands in `build/libs/BBSLipSync-<version>+<minecraft>.jar`. Each version takes its Minecraft, yarn, Fabric API and Java versions from `versions/<minecraft>.properties` and compiles against `libs/bbs-2.7-<minecraft>.jar`.
+The jar lands in `build/libs/BBSLipSync-<version>+<minecraft>.jar`. Each version takes its Minecraft, yarn, Fabric API and Java versions from `versions/<minecraft>.properties` and compiles against `libs/bbs-2.8-<minecraft>.jar`.
 
-Jar появляется в `build/libs/BBSLipSync-<версия>+<minecraft>.jar`. Версии Minecraft, yarn, Fabric API и Java берутся из `versions/<minecraft>.properties`, компиляция идёт против `libs/bbs-2.7-<minecraft>.jar`.
+Jar появляется в `build/libs/BBSLipSync-<версия>+<minecraft>.jar`. Версии Minecraft, yarn, Fabric API и Java берутся из `versions/<minecraft>.properties`, компиляция идёт против `libs/bbs-2.8-<minecraft>.jar`.
 
 ---
+
+The separate `-sources.jar` next to each release JAR contains its sources. BBS dependencies are ordinary JARs with separate sources JARs in `libs/`.
+
+Рядом с каждым JAR лежит отдельный `-sources.jar`. Зависимости BBS берутся из обычных JAR и отдельных sources JAR в `libs/`.
 
 ## Credits / Благодарности
 
